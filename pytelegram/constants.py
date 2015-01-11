@@ -71,6 +71,57 @@ tgl_sce_requested = 1
 tgl_sce_accepted = 2
 tgl_sce_committed = 3
 
+
+
+_MACROS = {
+"FLAG_MESSAGE_EMPTY":1,
+"FLAG_DELETED":2,
+"FLAG_FORBIDDEN":4,
+"FLAG_HAS_PHOTO":8,
+"FLAG_CREATED":16,
+"FLAG_SESSION_OUTBOUND":32,
+"FLAG_USER_SELF":128,
+"FLAG_USER_FOREIGN":256,
+"FLAG_USER_CONTACT":512,
+"FLAG_USER_IN_CONTACT":1024,
+"FLAG_USER_OUT_CONTACT":2048,
+"FLAG_CHAT_IN_CHAT":128,
+"FLAG_ENCRYPTED":4096,
+"FLAG_PENDING":8192,
+"MAX_DC_SESSIONS":3,
+"TGL_MAX_DC_NUM":100,
+"TG_SERVER_DEFAULT":4,
+"TG_SERVER_TEST_DEFAULT":2,
+"TGL_ENCRYPTED_LAYER":17,
+"TGL_SCHEME_LAYER":19,
+"TGL_UPDATE_CREATED":1,
+"TGL_UPDATE_DELETED":2,
+"TGL_UPDATE_PHONE":4,
+"TGL_UPDATE_CONTACT":8,
+"TGL_UPDATE_PHOTO":16,
+"TGL_UPDATE_BLOCKED":32,
+"TGL_UPDATE_REAL_NAME":64,
+"TGL_UPDATE_NAME":128,
+"TGL_UPDATE_REQUESTED":256,
+"TGL_UPDATE_WORKING":512,
+"TGL_UPDATE_FLAGS":1024,
+"TGL_UPDATE_TITLE":2048,
+"TGL_UPDATE_ADMIN":4096,
+"TGL_UPDATE_MEMBERS":8192,
+"TGL_UPDATE_ACCESS_HASH":16384,
+"E_ERROR":0,
+"E_WARNING":1,
+"E_NOTICE":2,
+"E_DEBUG":6,
+"TGL_LOCK_DIFF":1,
+"TGL_MAX_RSA_KEYS_NUM":10,
+"TGL_PEER_USER":1,
+"TGL_PEER_CHAT":2,
+"TGL_PEER_GEO_CHAT":3,
+"TGL_PEER_ENCR_CHAT":4,
+"TGL_PEER_UNKNOWN":0,
+}
+
 _TGL_HEADERS = r"""
 typedef unsigned long size_t;
 
@@ -88,20 +139,24 @@ void tgln_set_signal_handler (struct tgl_state *TLS, int sig,
                 void (*signal_cb) (int fd, short event, void *arg));
 
 extern struct tgl_timer_methods tgl_libevent_timers;
-#define FLAG_MESSAGE_EMPTY ...
-#define FLAG_DELETED ...
-#define FLAG_FORBIDDEN ...
-#define FLAG_HAS_PHOTO ...
-#define FLAG_CREATED ...
-#define FLAG_SESSION_OUTBOUND ...
-#define FLAG_USER_SELF ...
-#define FLAG_USER_FOREIGN ...
-#define FLAG_USER_CONTACT ...
-#define FLAG_USER_IN_CONTACT ...
-#define FLAG_USER_OUT_CONTACT ...
-#define FLAG_CHAT_IN_CHAT ...
-#define FLAG_ENCRYPTED ...
-#define FLAG_PENDING ...
+
+#define FLAG_MESSAGE_EMPTY 1
+#define FLAG_DELETED 2
+#define FLAG_FORBIDDEN 4
+#define FLAG_HAS_PHOTO 8
+#define FLAG_CREATED 16
+#define FLAG_SESSION_OUTBOUND 32
+
+#define FLAG_USER_SELF 128
+#define FLAG_USER_FOREIGN 256
+#define FLAG_USER_CONTACT 512
+#define FLAG_USER_IN_CONTACT 1024
+#define FLAG_USER_OUT_CONTACT 2048
+
+#define FLAG_CHAT_IN_CHAT 128
+
+#define FLAG_ENCRYPTED 4096
+#define FLAG_PENDING 8192
 
 typedef struct { int type; int id; } tgl_peer_id_t;
 
@@ -117,7 +172,8 @@ enum tgl_dc_state {
   st_authorized,
   st_error
 };
-#define MAX_DC_SESSIONS ...
+
+#define MAX_DC_SESSIONS 3
 
 struct tgl_session {
   struct tgl_dc *dc;
@@ -641,31 +697,34 @@ void tglp_insert_chat (struct tgl_state *TLS, tgl_peer_t *P);
 enum tgl_typing_status tglf_fetch_typing (void);
 
 void wait_for_event (struct tgl_state *TLS, int flags, int (*is_end)(void));
-#define TGL_MAX_DC_NUM ...
-#define TG_SERVER_DEFAULT ...
-#define TG_SERVER_TEST_DEFAULT ...
-#define TGL_ENCRYPTED_LAYER ...
-#define TGL_SCHEME_LAYER ...
+
+#define TGL_MAX_DC_NUM 100
+#define TG_SERVER_DEFAULT 4
+#define TG_SERVER_TEST_DEFAULT 2
+
+#define TGL_ENCRYPTED_LAYER 17
+#define TGL_SCHEME_LAYER 19
 
 struct connection;
 struct mtproto_methods;
 struct tgl_session;
 struct tgl_dc;
-#define TGL_UPDATE_CREATED ...
-#define TGL_UPDATE_DELETED ...
-#define TGL_UPDATE_PHONE ...
-#define TGL_UPDATE_CONTACT ...
-#define TGL_UPDATE_PHOTO ...
-#define TGL_UPDATE_BLOCKED ...
-#define TGL_UPDATE_REAL_NAME ...
-#define TGL_UPDATE_NAME ...
-#define TGL_UPDATE_REQUESTED ...
-#define TGL_UPDATE_WORKING ...
-#define TGL_UPDATE_FLAGS ...
-#define TGL_UPDATE_TITLE ...
-#define TGL_UPDATE_ADMIN ...
-#define TGL_UPDATE_MEMBERS ...
-#define TGL_UPDATE_ACCESS_HASH ...
+
+#define TGL_UPDATE_CREATED 1
+#define TGL_UPDATE_DELETED 2
+#define TGL_UPDATE_PHONE 4
+#define TGL_UPDATE_CONTACT 8
+#define TGL_UPDATE_PHOTO 16
+#define TGL_UPDATE_BLOCKED 32
+#define TGL_UPDATE_REAL_NAME 64
+#define TGL_UPDATE_NAME 128
+#define TGL_UPDATE_REQUESTED 256
+#define TGL_UPDATE_WORKING 512
+#define TGL_UPDATE_FLAGS 1024
+#define TGL_UPDATE_TITLE 2048
+#define TGL_UPDATE_ADMIN 4096
+#define TGL_UPDATE_MEMBERS 8192
+#define TGL_UPDATE_ACCESS_HASH 16384
 
 struct tgl_allocator {
   void *(*alloc)(size_t size);
@@ -736,12 +795,15 @@ struct tgl_timer_methods {
   void (*remove) (struct tgl_timer *t);
   void (*free) (struct tgl_timer *t);
 };
-#define E_ERROR ...
-#define E_WARNING ...
-#define E_NOTICE ...
-#define E_DEBUG ...
-#define TGL_LOCK_DIFF ...
-#define TGL_MAX_RSA_KEYS_NUM ...
+
+#define E_ERROR 0
+#define E_WARNING 1
+#define E_NOTICE 2
+#define E_DEBUG 6
+
+#define TGL_LOCK_DIFF 1
+
+#define TGL_MAX_RSA_KEYS_NUM 10
 
 struct tgl_state {
   int our_id;   int encr_root;
@@ -838,11 +900,12 @@ int tgl_complete_chat_list (struct tgl_state *TLS, int index, const char *text, 
 int tgl_complete_encr_chat_list (struct tgl_state *TLS, int index, const char *text, int len, char **R);
 int tgl_complete_peer_list (struct tgl_state *TLS, int index, const char *text, int len, char **R);
 int tgl_secret_chat_for_user (struct tgl_state *TLS, tgl_peer_id_t user_id);
-#define TGL_PEER_USER ...
-#define TGL_PEER_CHAT ...
-#define TGL_PEER_GEO_CHAT ...
-#define TGL_PEER_ENCR_CHAT ...
-#define TGL_PEER_UNKNOWN ...
+
+#define TGL_PEER_USER 1
+#define TGL_PEER_CHAT 2
+#define TGL_PEER_GEO_CHAT 3
+#define TGL_PEER_ENCR_CHAT 4
+#define TGL_PEER_UNKNOWN 0
 
 void tgl_set_binlog_mode (struct tgl_state *TLS, int mode);
 void tgl_set_binlog_path (struct tgl_state *TLS, const char *path);

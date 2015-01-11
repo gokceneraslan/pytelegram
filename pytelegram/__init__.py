@@ -72,3 +72,7 @@ tgl = ffi.verify(source=source, sources=['tgl/auto/auto.c',
                  define_macros=[('EVENT_V2', '1')],
                  undef_macros=['NDEBUG'])
 
+#workaround for CFFI bug:
+# https://bitbucket.org/cffi/cffi/commits/932dc0fe2e1644daf91455751654cadb71f14c17
+tgl.__dict__.update(constants._MACROS)
+
