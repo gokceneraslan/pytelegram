@@ -25,18 +25,12 @@ def _msg_cb(tls, msg):
         print("New message: ", ffi.string(msg.message).decode())
 
 
-if len(sys.argv) != 2:
-    print("Usage: %s telegram_rsa_key_path" % sys.argv[0])
-    sys.exit()
-
-
 upd_cb = generate_tgl_update()
 upd_cb.new_msg = _msg_cb
 upd_cb.msg_receive = _msg_cb
 
 
-tg = Telegram(rsa_key = sys.argv[1],
-              update_callbacks = upd_cb)
+tg = Telegram(update_callbacks = upd_cb)
 
 #tg._state.verbosity = 6
 

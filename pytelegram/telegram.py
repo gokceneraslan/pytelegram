@@ -7,14 +7,17 @@ import tempfile
 import sys
 import signal
 
+from pkg_resources import resource_filename
+
 @ffi.callback('void (*signal_cb) (int fd, short event, void *arg)')
 def signal_cb(fd, event, arg):
     os._exit(0)
 
 class Telegram(object):
     def __init__(self,
-                 rsa_key,
                  update_callbacks,
+                 rsa_key = os.path.join(resource_filename(__name__,
+                                                        'tg-server.pub')),
                  app_id = 2899,
                  app_hash = "36722c72256a24c1225de00eb6a1ca74",
                  download_dir = None,
