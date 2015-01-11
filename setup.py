@@ -16,5 +16,4 @@ setup(name='pytelegram',
       setup_requires = ['cffi'],
       zip_safe=False,
       ext_package='pytelegram',
-      ext_modules=[pytelegram.ffi.verifier.get_extension()]
-     )
+      ext_modules=[pytelegram.ffi.verifier.get_extension()])

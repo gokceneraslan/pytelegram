@@ -13,26 +13,12 @@ from cffi import FFI
 
 from . import constants
 
-import platform
-
 
 VERSION = '0.0.1'
 
-#def dlopen(ffi, names):
-    #"""Try various names for the same library, for different platforms."""
-    #for name in names:
-        #try:
-            #return ffi.dlopen(name)
-        #except OSError:
-            #pass
-    ## Re-raise the exception.
-    #return ffi.dlopen(names[0])
-
-#TGL_LIBS = ['libtgl.so', 'libtgl.0.dylib']
 
 ffi = FFI()
 ffi.cdef(constants._TGL_HEADERS, packed=True)
-#tgl = dlopen(ffi, TGL_LIBS)
 
 source = '''
 #include "tgl.h"
@@ -45,9 +31,6 @@ source = '''
 #include "tgl-net.h"
 '''
 
-__define_macros =[('EVENT_V2', '1')]
-if platform.system().lower() == 'darwin':
-    __define_macros.append(('HAVE___BUILTIN_BSWAP32', '1'))
 
 tgl = ffi.verify(source=source, sources=['tgl/auto/auto.c',
                                          'tgl/binlog.c',
@@ -75,10 +58,10 @@ tgl = ffi.verify(source=source, sources=['tgl/auto/auto.c',
                                      '-fno-strict-aliasing',
                                      '-fno-omit-frame-pointer',
                                      '-Wno-unused-parameter'],
-                 define_macros=__define_macros,
+                 define_macros=[('EVENT_V2', '1'),
+                                ('HAVE___BUILTIN_BSWAP32', '1')],
                  undef_macros=['NDEBUG'])
 
 #workaround for CFFI bug:
 # https://bitbucket.org/cffi/cffi/commits/932dc0fe2e1644daf91455751654cadb71f14c17
 tgl.__dict__.update(constants._MACROS)
-
