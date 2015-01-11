@@ -13,6 +13,8 @@ from cffi import FFI
 
 from . import constants
 
+import platform
+
 
 VERSION = '0.0.1'
 
@@ -43,6 +45,10 @@ source = '''
 #include "tgl-net.h"
 '''
 
+__define_macros =[('EVENT_V2', '1')]
+if platform.system().lower() == 'darwin':
+    __define_macros.append(('HAVE___BUILTIN_BSWAP32', '1'))
+
 tgl = ffi.verify(source=source, sources=['tgl/auto/auto.c',
                                          'tgl/binlog.c',
                                          'tgl/mtproto-client.c',
@@ -69,7 +75,7 @@ tgl = ffi.verify(source=source, sources=['tgl/auto/auto.c',
                                      '-fno-strict-aliasing',
                                      '-fno-omit-frame-pointer',
                                      '-Wno-unused-parameter'],
-                 define_macros=[('EVENT_V2', '1')],
+                 define_macros=__define_macros,
                  undef_macros=['NDEBUG'])
 
 #workaround for CFFI bug:
