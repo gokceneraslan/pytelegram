@@ -15,7 +15,7 @@ def signal_cb(fd, event, arg):
 
 class Telegram(object):
     def __init__(self,
-                 update_callbacks,
+                 update_callbacks = generate_tgl_update(),
                  rsa_key = os.path.join(resource_filename(__name__,
                                                         'tg-server.pub')),
                  app_id = 2899,
