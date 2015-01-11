@@ -59,6 +59,10 @@ def preprocess(source, keep_defines=False):
         #remove #define __TGL_H__ line
         source = re.sub(r'^\s*#define.*?_H__.*?$', '', source, flags=re.MULTILINE)
 
+        #replace #define foo 1 with #replace foo ...
+        #this is required by ffi.verify()
+        source = re.sub(r'^\s*#define\s(.*?)\s\d+?$', r'#define \1 ...', source, flags=re.MULTILINE)
+
     source = re.sub('\n{3,}', '\n\n', source)
     return source
 
