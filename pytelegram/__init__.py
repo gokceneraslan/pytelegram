@@ -48,7 +48,8 @@ tgl = ffi.verify(source=source, sources=['tgl/auto/auto.c',
                                          'tgl/tools.c'],
                  include_dirs=['tgl',
                                '/usr/include/event2'],
-                 libraries=['event', 'ssl', 'crypto'],
+                 libraries=['event', 'ssl', 'crypto', 'z'], #TODO: get library
+                                                            #names through pkg-config
                  ext_package='pytelegram',
                  extra_compile_args=['-ggdb',
                                      '-Wall',
